@@ -1,89 +1,64 @@
-package colecciones;
+package biblioteca_tp;
 
-
-
-
-import static colecciones.CategoriaProducto.*;
-
-/**
- * Clase principal para probar la gestión del inventario.
- */
 public class Main {
     
     public static void main(String[] args) {
-        System.out.println("--- INICIO DEL CASO PRÁCTICO: GESTIÓN DE INVENTARIO ---");
+        System.out.println("--- INICIO DEL EJERCICIO: GESTIÓN DE BIBLIOTECA ---");
         
-        Inventario inventario = new Inventario();
+        // 1. Creamos una biblioteca.
+        Biblioteca biblioteca = new Biblioteca("Biblioteca Central UTN");
+        System.out.println("\n== Tarea 1: Biblioteca Creada: " + biblioteca.getNombre() + " ==");
 
-        // 1. Crear al menos cinco productos con diferentes categorías y agregarlos al inventario.
-        System.out.println("\n== Tarea 1: Creación y adición de productos ==");
-        Producto p1 = new Producto("A001", "Manzanas kg", 1500.50, 50, ALIMENTOS);
-        Producto p2 = new Producto("E010", "Smart TV 4K", 250000.99, 12, ELECTRONICA);
-        Producto p3 = new Producto("R005", "Camiseta Algodón", 2500.00, 150, ROPA);
-        Producto p4 = new Producto("H100", "Juego de Sábanas", 4500.75, 30, HOGAR);
-        Producto p5 = new Producto("A002", "Leche UHT L.", 990.00, 200, ALIMENTOS);
-        Producto p6 = new Producto("R006", "Pantalón Denim", 15000.00, 40, ROPA);
+        // 2. Crear al menos tres autores
+        System.out.println("\n== Tarea 2: Creación de Autores ==");
+        Autor autor1 = new Autor("A001", "Gabriel García Márquez", "Colombiana");
+        Autor autor2 = new Autor("A002", "Jane Austen", "Británica");
+        Autor autor3 = new Autor("A003", "Jorge Luis Borges", "Argentina");
         
-        inventario.agregarProducto(p1);
-        inventario.agregarProducto(p2);
-        inventario.agregarProducto(p3);
-        inventario.agregarProducto(p4);
-        inventario.agregarProducto(p5);
-        inventario.agregarProducto(p6);
-        
-        // Intentar agregar un producto con ID duplicado (para probar la validación)
-        inventario.agregarProducto(new Producto("A001", "Peras kg", 1800.00, 10, ALIMENTOS));
-        
-        // 2. Listar todos los productos mostrando su información y categoría.
-        System.out.println("\n== Tarea 2: Listar todos los productos ==");
-        inventario.listarProductos();
+        autor1.mostrarInfo();
+        autor2.mostrarInfo();
+        autor3.mostrarInfo();
 
-        // 3. Buscar un producto por ID y mostrar su información.
-        System.out.println("\n== Tarea 3: Buscar producto por ID (E010) ==");
-        String idBuscar = "E010";
-        Producto productoEncontrado = inventario.buscarProductoPorId(idBuscar);
-        if (productoEncontrado != null) {
-            System.out.print("Producto encontrado: ");
-            productoEncontrado.mostrarInfo();
+        // 3. Agregar 5 libros asociados a alguno de los Autores a la biblioteca.
+        System.out.println("\n== Tarea 3: Agregando 5 Libros ==");
+        biblioteca.agregarLibro("978-0345", "Cien años de soledad", 1967, autor1);
+        biblioteca.agregarLibro("978-0451", "Orgullo y Prejuicio", 1813, autor2);
+        biblioteca.agregarLibro("978-0743", "Ficciones", 1944, autor3);
+        biblioteca.agregarLibro("978-0234", "El coronel no tiene quien le escriba", 1961, autor1);
+        biblioteca.agregarLibro("978-0111", "Emma", 1815, autor2);
+        
+        // 4. Listar todos los libros con su información y la del autor.
+        System.out.println("\n== Tarea 4: Listar todos los libros ==");
+        biblioteca.listarLibros();
+
+        // 5. Buscar un libro por su ISBN y mostrar su información.
+        System.out.println("\n== Tarea 5: Buscar libro por ISBN (978-0743) ==");
+        String isbnBuscar = "978-0743";
+        Libro libroEncontrado = biblioteca.buscarLibroPorIsbn(isbnBuscar);
+        if (libroEncontrado != null) {
+            System.out.print("Libro encontrado: ");
+            libroEncontrado.mostrarInfo();
         } else {
-            System.out.println("Producto con ID " + idBuscar + " no encontrado.");
+            System.out.println("Libro con ISBN " + isbnBuscar + " no encontrado.");
         }
 
-        // 4. Filtrar y mostrar productos que pertenezcan a una categoría específica.
-        System.out.println("\n== Tarea 4: Filtrar por Categoría (ROPA) ==");
-        inventario.filtrarPorCategoria(ROPA);
+        // 6. Filtrar y mostrar los libros publicados en un año específico (1813).
+        System.out.println("\n== Tarea 6: Filtrar por Año (1813) ==");
+        biblioteca.filtrarLibrosPorAnio(1813);
 
-        // 5. Eliminar un producto por su ID y listar los productos restantes.
-        System.out.println("\n== Tarea 5: Eliminar producto (ID: H100) y listar restantes ==");
-        inventario.eliminarProducto("H100");
-        inventario.listarProductos();
+        // 7. Eliminar un libro por su ISBN y listar los libros restantes.
+        System.out.println("\n== Tarea 7: Eliminar libro (ISBN: 978-0451) y listar restantes ==");
+        biblioteca.eliminarLibro("978-0451");
+        biblioteca.listarLibros();
         
-        // 6. Actualizar el stock de un producto existente.
-        System.out.println("\n== Tarea 6: Actualizar stock de p5 (ID: A002) ==");
-        inventario.actualizarStock("A002", 250);
-        // Mostrar el producto actualizado
-        inventario.buscarProductoPorId("A002").mostrarInfo();
+        // 8. Mostrar la cantidad total de libros en la biblioteca.
+        System.out.println("\n== Tarea 8: Cantidad total de libros ==");
+        System.out.println("La biblioteca tiene un total de: " + biblioteca.obtenerCantidadLibros() + " libros.");
 
-        // 7. Mostrar el total de stock disponible.
-        System.out.println("\n== Tarea 7: Mostrar el total de stock disponible ==");
-        System.out.println("Stock Total en el Inventario: " + inventario.obtenerTotalStock() + " unidades.");
+        // 9. Listar todos los autores de los libros disponibles en la biblioteca.
+        System.out.println("\n== Tarea 9: Listar autores disponibles ==");
+        biblioteca.mostrarAutoresDisponibles();
 
-        // 8. Obtener y mostrar el producto con mayor stock.
-        System.out.println("\n== Tarea 8: Producto con mayor stock ==");
-        Producto mayorStock = inventario.obtenerProductoConMayorStock();
-        if (mayorStock != null) {
-            System.out.println("Producto con Mayor Stock: ");
-            mayorStock.mostrarInfo();
-        }
-
-        // 9. Filtrar productos con precios entre $1000 y $3000.
-        System.out.println("\n== Tarea 9: Filtrar productos por precio ($1000 a $3000) ==");
-        inventario.filtrarProductosPorPrecio(1000.00, 3000.00);
-
-        // 10. Mostrar las categorías disponibles con sus descripciones.
-        System.out.println("\n== Tarea 10: Mostrar categorías disponibles con descripciones ==");
-        inventario.mostrarCategoriasDisponibles();
-
-        System.out.println("\n--- FIN DEL CASO PRÁCTICO ---");
+        System.out.println("\n--- FIN DEL EJERCICIO ---");
     }
 }
