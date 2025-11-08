@@ -1,78 +1,89 @@
-package universidad_tp;
+package colecciones;
 
+
+
+
+import static colecciones.CategoriaProducto.*;
+
+/**
+ * Clase principal para probar la gestión del inventario.
+ */
 public class Main {
     
     public static void main(String[] args) {
-        System.out.println("--- INICIO DEL EJERCICIO: GESTIÓN DE UNIVERSIDAD ---");
+        System.out.println("--- INICIO DEL CASO PRÁCTICO: GESTIÓN DE INVENTARIO ---");
         
-        Universidad utn = new Universidad("UTN - TUP");
+        Inventario inventario = new Inventario();
+
+        // 1. Crear al menos cinco productos con diferentes categorías y agregarlos al inventario.
+        System.out.println("\n== Tarea 1: Creación y adición de productos ==");
+        Producto p1 = new Producto("A001", "Manzanas kg", 1500.50, 50, ALIMENTOS);
+        Producto p2 = new Producto("E010", "Smart TV 4K", 250000.99, 12, ELECTRONICA);
+        Producto p3 = new Producto("R005", "Camiseta Algodón", 2500.00, 150, ROPA);
+        Producto p4 = new Producto("H100", "Juego de Sábanas", 4500.75, 30, HOGAR);
+        Producto p5 = new Producto("A002", "Leche UHT L.", 990.00, 200, ALIMENTOS);
+        Producto p6 = new Producto("R006", "Pantalón Denim", 15000.00, 40, ROPA);
         
-        // 1. Crear al menos 3 profesores y 5 cursos.
-        Profesor p1 = new Profesor("P100", "Dr. Pérez", "Programación");
-        Profesor p2 = new Profesor("P200", "Lic. García", "Bases de Datos");
-        Profesor p3 = new Profesor("P300", "Ing. López", "Redes");
-
-        Curso c1 = new Curso("C101", "Programación Avanzada");
-        Curso c2 = new Curso("C102", "Estructura de Datos");
-        Curso c3 = new Curso("C201", "Modelado de Datos");
-        Curso c4 = new Curso("C301", "Seguridad en Redes");
-        Curso c5 = new Curso("C103", "Diseño de Sistemas");
+        inventario.agregarProducto(p1);
+        inventario.agregarProducto(p2);
+        inventario.agregarProducto(p3);
+        inventario.agregarProducto(p4);
+        inventario.agregarProducto(p5);
+        inventario.agregarProducto(p6);
         
-        // 2. Agregar profesores y cursos a la universidad.
-        System.out.println("\n== Tarea 2: Agregar Profesores y Cursos ==");
-        utn.agregarProfesor(p1);
-        utn.agregarProfesor(p2);
-        utn.agregarProfesor(p3);
+        // Intentar agregar un producto con ID duplicado (para probar la validación)
+        inventario.agregarProducto(new Producto("A001", "Peras kg", 1800.00, 10, ALIMENTOS));
         
-        utn.agregarCurso(c1);
-        utn.agregarCurso(c2);
-        utn.agregarCurso(c3);
-        utn.agregarCurso(c4);
-        utn.agregarCurso(c5);
-        
-        // 3. Asignar profesores a cursos usando asignarProfesorACurso(...).
-        System.out.println("\n== Tarea 3: Asignar Profesores a Cursos ==");
-        utn.asignarProfesorACurso("C101", "P100"); // P1 asigna C101
-        utn.asignarProfesorACurso("C102", "P100"); // P1 asigna C102
-        utn.asignarProfesorACurso("C201", "P200"); // P2 asigna C201
-        utn.asignarProfesorACurso("C301", "P300"); // P3 asigna C301
-        utn.asignarProfesorACurso("C103", "P100"); // P1 asigna C103
+        // 2. Listar todos los productos mostrando su información y categoría.
+        System.out.println("\n== Tarea 2: Listar todos los productos ==");
+        inventario.listarProductos();
 
-        // 4. Listar cursos con su profesor y profesores con sus cursos.
-        System.out.println("\n== Tarea 4: Listar Cursos y Profesores ==");
-        utn.listarCursos();
-        p1.listarCursos();
-        p2.listarCursos();
-
-        // 5. Cambiar el profesor de un curso y verificar que ambos lados quedan sincronizados.
-        System.out.println("\n== Tarea 5: Cambiar profesor de C103 (P1 -> P2) ==");
-        utn.asignarProfesorACurso("C103", "P200"); // C103 ahora va a P200
-
-        System.out.println("-- Verificación de listas después del cambio --");
-        p1.listarCursos(); // C103 debe desaparecer de aquí
-        p2.listarCursos(); // C103 debe aparecer aquí
-        utn.buscarCursoPorCodigo("C103").mostrarInfo();
-
-        // 6. Remover un curso y confirmar que ya no aparece en la lista del profesor.
-        System.out.println("\n== Tarea 6: Remover curso C201 (dictado por P200) ==");
-        utn.eliminarCurso("C201");
-        p2.listarCursos(); // C201 debe desaparecer de aquí
-
-        // 7. Remover un profesor y dejar profesor = null,
-        System.out.println("\n== Tarea 7: Remover profesor P300 (dicta C301) ==");
-        utn.eliminarProfesor("P300");
-        utn.listarProfesores();
-        
-        // Verificar que C301 ahora no tiene profesor
-        Curso c301 = utn.buscarCursoPorCodigo("C301");
-        if (c301 != null) {
-            c301.mostrarInfo();
+        // 3. Buscar un producto por ID y mostrar su información.
+        System.out.println("\n== Tarea 3: Buscar producto por ID (E010) ==");
+        String idBuscar = "E010";
+        Producto productoEncontrado = inventario.buscarProductoPorId(idBuscar);
+        if (productoEncontrado != null) {
+            System.out.print("Producto encontrado: ");
+            productoEncontrado.mostrarInfo();
+        } else {
+            System.out.println("Producto con ID " + idBuscar + " no encontrado.");
         }
 
-        // 8. Mostrar un reporte: cantidad de cursos por profesor.
-        System.out.println("\n== Tarea 8: Reporte de Cursos por Profesor ==");
-        utn.mostrarReporteCursosPorProfesor();
+        // 4. Filtrar y mostrar productos que pertenezcan a una categoría específica.
+        System.out.println("\n== Tarea 4: Filtrar por Categoría (ROPA) ==");
+        inventario.filtrarPorCategoria(ROPA);
 
-        System.out.println("\n--- FIN DEL EJERCICIO ---");
+        // 5. Eliminar un producto por su ID y listar los productos restantes.
+        System.out.println("\n== Tarea 5: Eliminar producto (ID: H100) y listar restantes ==");
+        inventario.eliminarProducto("H100");
+        inventario.listarProductos();
+        
+        // 6. Actualizar el stock de un producto existente.
+        System.out.println("\n== Tarea 6: Actualizar stock de p5 (ID: A002) ==");
+        inventario.actualizarStock("A002", 250);
+        // Mostrar el producto actualizado
+        inventario.buscarProductoPorId("A002").mostrarInfo();
+
+        // 7. Mostrar el total de stock disponible.
+        System.out.println("\n== Tarea 7: Mostrar el total de stock disponible ==");
+        System.out.println("Stock Total en el Inventario: " + inventario.obtenerTotalStock() + " unidades.");
+
+        // 8. Obtener y mostrar el producto con mayor stock.
+        System.out.println("\n== Tarea 8: Producto con mayor stock ==");
+        Producto mayorStock = inventario.obtenerProductoConMayorStock();
+        if (mayorStock != null) {
+            System.out.println("Producto con Mayor Stock: ");
+            mayorStock.mostrarInfo();
+        }
+
+        // 9. Filtrar productos con precios entre $1000 y $3000.
+        System.out.println("\n== Tarea 9: Filtrar productos por precio ($1000 a $3000) ==");
+        inventario.filtrarProductosPorPrecio(1000.00, 3000.00);
+
+        // 10. Mostrar las categorías disponibles con sus descripciones.
+        System.out.println("\n== Tarea 10: Mostrar categorías disponibles con descripciones ==");
+        inventario.mostrarCategoriasDisponibles();
+
+        System.out.println("\n--- FIN DEL CASO PRÁCTICO ---");
     }
 }
